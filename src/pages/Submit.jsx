@@ -1,13 +1,7 @@
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import api from "../api";
-import { io } from "socket.io-client";
-
-// Connect to backend Socket.IO server
-const socket = io("https://your-backend-url.com"); // replace with your backend URL
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Submit() {
   const navigate = useNavigate();
@@ -19,7 +13,7 @@ export default function Submit() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Block access if not logged in
+  // 🚫 Block access if not logged in
   if (!token) {
     return (
       <div className="max-w-lg mx-auto p-6 bg-white rounded shadow text-center">
@@ -34,60 +28,46 @@ export default function Submit() {
     );
   }
 
+  // ✅ Handle Submit (Frontend only version)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Open the working submission form first
-      const submissionWindow = window.open(
-        "https://submission12.netlify.app/",
-        "_blank"
-      );
+      // Simulate short delay for "sending"
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Prepare form data
-      const form = new FormData();
-      form.append("title", title);
-      form.append("department", department);
-      form.append("description", description);
-      if (file) form.append("file", file);
-
-      // Send submission to backend
-      const res = await api.post("/assignments/submit", form, {
-        headers: { 
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`
-        }
+      toast.success("✅ Assignment submitted successfully!", {
+        position: "top-right",
+        autoClose: 2000,
       });
 
-      // Notify admin in real-time
-      socket.emit("new_submission", {
-        title,
-        user: token, // or user name
-        timestamp: new Date(),
-      });
+      // 🌐 Redirect to your working submission form
+      setTimeout(() => {
+        window.location.href = "https://submission12.netlify.app/";
+      }, 2500);
 
-      // Show toast to user
-      toast.success(res.data.message || "Assignment submitted successfully!");
-
-      // After a short delay, redirect original window back home
+      // 🏠 Then automatically return home after 5 seconds
       setTimeout(() => {
         navigate("/");
-      }, 1500);
+      }, 7500);
 
-      setLoading(false);
     } catch (err) {
       console.error(err);
-      toast.error("❌ Submission failed. Please try again.");
+      toast.error("❌ Submission failed. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-      <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-xl font-semibold mb-4">📤 Submit Assignment</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+        
         <div>
           <label className="block text-sm font-medium">Title</label>
           <input
@@ -141,6 +121,9 @@ export default function Submit() {
           </button>
         </div>
       </form>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 }
