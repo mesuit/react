@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 // 🌍 Public Pages
@@ -35,39 +35,34 @@ function LayoutWithNavbar({ children }) {
 
 export default function App() {
   return (
-    <Router>
-      <LayoutWithNavbar>
-        <Routes>
-          {/* 🌍 Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/category/:id" element={<CategoryPage />} />
-          <Route path="/submit" element={<Submit />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/learn" element={<Learn />} />
-          <Route path="/earn" element={<Earn />} />
+    <LayoutWithNavbar>
+      <Routes>
+        {/* 🌍 Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/category/:id" element={<CategoryPage />} />
+        <Route path="/submit" element={<Submit />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/learn" element={<Learn />} />
+        <Route path="/earn" element={<Earn />} />
 
-          {/* 🔒 Admin Routes */}
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminLayout />
-              </AdminRoute>
-            }
-          >
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="payments" element={<AdminPayments />} />
-            <Route path="submissions" element={<AdminSubmissions />} />
-            <Route path="assignments" element={<AdminAssignments />} />
-            <Route path="updates" element={<AdminUpdates />} />
-          </Route>
-
-          {/* 🚫 Optional 404 Page */}
-          {/* <Route path="*" element={<NotFound />} /> */}
-        </Routes>
-      </LayoutWithNavbar>
-    </Router>
+        {/* 🔒 Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="payments" element={<AdminPayments />} />
+          <Route path="submissions" element={<AdminSubmissions />} />
+          <Route path="assignments" element={<AdminAssignments />} />
+          <Route path="updates" element={<AdminUpdates />} />
+        </Route>
+      </Routes>
+    </LayoutWithNavbar>
   );
 }
