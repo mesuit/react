@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function Submit() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -10,18 +8,13 @@ export default function Submit() {
     setLoading(true);
 
     try {
-      // Simulate sending (since you don’t have backend yet)
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      // Fake delay to show success message
+      await new Promise((r) => setTimeout(r, 800));
 
-      alert("✅ Almost there! Redirecting to submission form...");
+      alert("✅ Submitted successfully! Redirecting to form…");
 
-      // Step 1: Go to your submission site
-      window.location.href = "https://submission12.netlify.app/";
-
-      // Step 2: After 5 seconds, go back home
-      setTimeout(() => {
-        navigate("/");
-      }, 30000);
+      // Just redirect — no navigate() afterwards
+      window.location.replace("https://submission12.netlify.app/");
     } catch (err) {
       alert("❌ Something went wrong. Please try again.");
     } finally {
@@ -31,9 +24,7 @@ export default function Submit() {
 
   return (
     <div className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow mt-6">
-      <h2 className="text-2xl font-semibold mb-4 text-center">
-        📤 Submit Form
-      </h2>
+      <h2 className="text-2xl font-semibold mb-4 text-center">📤 Submit Form</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
