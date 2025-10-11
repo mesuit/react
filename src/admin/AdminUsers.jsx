@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import api from "../api"; // axios instance
+import api from "../api"; // your axios instance
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Get token from localStorage (or wherever you store it)
+  // Get token from localStorage
   const token = localStorage.getItem("token");
 
   // Axios config with auth header
@@ -19,7 +19,7 @@ export default function AdminUsers() {
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const { data } = await api.get("/auth/users", config);
+      const { data } = await api.get("/auth/users", config); // GET uses config as 2nd argument
       setUsers(data);
     } catch (err) {
       console.error("❌ Error fetching users:", err);
@@ -36,7 +36,7 @@ export default function AdminUsers() {
   // Verify user
   const verifyUser = async (id) => {
     try {
-      await api.put(`/auth/users/${id}/verify`, {}, config);
+      await api.put(`/auth/users/${id}/verify`, {}, config); // PUT: empty body + config
       alert("✅ User verified successfully");
       fetchUsers();
     } catch (err) {
@@ -48,7 +48,7 @@ export default function AdminUsers() {
   // Suspend / Unsuspend user
   const toggleSuspend = async (id) => {
     try {
-      await api.put(`/auth/users/${id}/suspend`, {}, config);
+      await api.put(`/auth/users/${id}/suspend`, {}, config); // PUT: empty body + config
       alert("⚙️ User suspension status updated");
       fetchUsers();
     } catch (err) {
