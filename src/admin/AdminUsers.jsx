@@ -6,10 +6,12 @@ export default function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // --------------------
   // Fetch all users
+  // --------------------
   const fetchUsers = async () => {
     try {
-      const { data } = await api.get("/admin/users");
+      const { data } = await api.get("/auth/all"); // if you have a route to fetch all users
       setUsers(data);
     } catch (err) {
       console.error("❌ Error fetching users:", err);
@@ -23,10 +25,12 @@ export default function AdminUsers() {
     fetchUsers();
   }, []);
 
-  // ✅ Verify user
+  // --------------------
+  // Verify user (Admin only)
+  // --------------------
   const verifyUser = async (id) => {
     try {
-      await api.post(`/admin/users/${id}/verify`);
+      await api.put(`/auth/verify/${id}`); // matches backend route
       alert("✅ User verified successfully");
       fetchUsers();
     } catch (err) {
@@ -35,10 +39,12 @@ export default function AdminUsers() {
     }
   };
 
-  // 🚫 Suspend or unsuspend user
+  // --------------------
+  // Suspend or Unsuspend user (Admin only)
+  // --------------------
   const toggleSuspend = async (id) => {
     try {
-      await api.post(`/admin/users/${id}/suspend`);
+      await api.put(`/auth/suspend/${id}`); // matches backend route
       alert("⚙️ User suspension status updated");
       fetchUsers();
     } catch (err) {
@@ -47,6 +53,9 @@ export default function AdminUsers() {
     }
   };
 
+  // --------------------
+  // Render
+  // --------------------
   if (loading) return <p>Loading users...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
   if (!users.length) return <p>No users found.</p>;
