@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-const API_BASE = process.env.REACT_APP_BACKEND_URL || "https://backw-5358.onrender.com/api";
+import api from "../api"; // ✅ import your configured axios instance
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -10,12 +9,13 @@ export default function AdminUsers() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`${API_BASE}/admin/users`);
-        if (!res.ok) throw new Error("Failed to fetch users");
-        const data = await res.json();
-        setUsers(data);
+        const res = await api.get("/admin/users"); // ✅ token auto-added
+        setUsers(res.data);
       } catch (err) {
-        setError(err.message);
+        console.error("❌ Error fetching users:", err.response?.data || err.message);
+        setError(
+          err.response?.data?.message || "Failed to fetch users (unauthorized)"
+        );
       } finally {
         setLoading(false);
       }
