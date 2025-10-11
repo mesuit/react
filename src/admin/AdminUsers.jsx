@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
-import api from "../api";
+import api from "../api"; // axios instance
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Get token from localStorage (or wherever you store it)
+  const token = localStorage.getItem("token");
+
+  // Axios config with auth header
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const { data } = await api.get("/auth/users"); // Make sure this route exists in backend
+      const { data } = await api.get("/auth/users", config);
       setUsers(data);
     } catch (err) {
       console.error("❌ Error fetching users:", err);
@@ -23,10 +33,10 @@ export default function AdminUsers() {
     fetchUsers();
   }, []);
 
-  // ✅ Verify user
+  // Verify user
   const verifyUser = async (id) => {
     try {
-      await api.put(`/auth/verify/${id}`); // Use PUT and correct path
+      await api.put(`/auth/users/${id}/verify`, {}, config);
       alert("✅ User verified successfully");
       fetchUsers();
     } catch (err) {
@@ -35,10 +45,10 @@ export default function AdminUsers() {
     }
   };
 
-  // 🚫 Suspend or Unsuspend user
+  // Suspend / Unsuspend user
   const toggleSuspend = async (id) => {
     try {
-      await api.put(`/auth/suspend/${id}`); // Use PUT and correct path
+      await api.put(`/auth/users/${id}/suspend`, {}, config);
       alert("⚙️ User suspension status updated");
       fetchUsers();
     } catch (err) {
