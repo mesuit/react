@@ -1,9 +1,5 @@
-
-
-
 import React, { useEffect, useState } from "react";
-
-const API_BASE = process.env.REACT_APP_BACKEND_URL || "https://backw-5358.onrender.com/api";
+import api from "../api"; // ✅ Import axios instance
 
 export default function AdminAssignments() {
   const [assignments, setAssignments] = useState([]);
@@ -13,21 +9,14 @@ export default function AdminAssignments() {
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
-        const res = await fetch(`${API_BASE}/admin/assignments`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // in case you’re using cookies/session
-        });
-
-        if (!res.ok) {
-          throw new Error(`Failed to load assignments (${res.status})`);
-        }
-
-        const data = await res.json();
-        setAssignments(data);
+        // ✅ Uses your axios instance, token added automatically
+        const res = await api.get("/admin/assignments");
+        setAssignments(res.data);
       } catch (err) {
-        console.error("Error fetching assignments:", err);
-        setError("Could not load assignments.");
+        console.error("❌ Error fetching assignments:", err.response?.data || err.message);
+        setError(
+          err.response?.data?.message || "Failed to load assignments (unauthorized)"
+        );
       } finally {
         setLoading(false);
       }
