@@ -7,6 +7,7 @@ const BASE =
 const api = axios.create({
   baseURL: BASE,
   headers: { "Content-Type": "application/json" },
+  withCredentials: true, // 🔥 important for cross-origin CORS requests
 });
 
 // Attach token if present
@@ -19,4 +20,3 @@ api.interceptors.request.use((cfg) => {
 });
 
 export default api;
-
