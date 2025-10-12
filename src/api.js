@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Always include /api so calls match your backend routes
 const BASE =
-  process.env.REACT_APP_BACKEND_URL || "https://backw-5358.onrender.com/api";
+  process.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com/api";
 
 const api = axios.create({
   baseURL: BASE,
