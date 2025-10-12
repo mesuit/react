@@ -9,7 +9,7 @@ export default function AdminUsers() {
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const { data } = await api.get("/admin/users"); // ✅ Correct admin route
+      const { data } = await api.get("/admin/users"); // ✅ Correct route
       setUsers(data);
     } catch (err) {
       console.error("❌ Error fetching users:", err);
@@ -36,10 +36,14 @@ export default function AdminUsers() {
   };
 
   // Suspend / Unsuspend user
-  const toggleSuspend = async (id) => {
+  const toggleSuspend = async (id, isSuspended) => {
     try {
       await api.put(`/admin/suspend/${id}`); // ✅ Correct route
-      alert("⚙️ User suspension status updated");
+      alert(
+        isSuspended
+          ? "♻️ User unsuspended successfully"
+          : "⛔ User suspended successfully"
+      );
       fetchUsers();
     } catch (err) {
       alert("❌ Failed to change suspension status");
@@ -95,7 +99,7 @@ export default function AdminUsers() {
                   </button>
                 )}
                 <button
-                  onClick={() => toggleSuspend(u._id)}
+                  onClick={() => toggleSuspend(u._id, u.isSuspended)}
                   className={`${
                     u.isSuspended ? "bg-yellow-500" : "bg-red-500"
                   } text-white px-3 py-1 rounded hover:opacity-80`}
