@@ -37,19 +37,23 @@ export default function Login() {
       if (data.role === "admin") navigate("/admin");
       else navigate("/");
     } catch (err) {
+      console.error("Login error:", err);
       const msg =
         err.response?.data?.error ||
         err.response?.data?.message ||
-        "❌ Login failed, please try again.";
+        (err.message.includes("Network Error")
+          ? "⚠️ Cannot reach server. Try again in a few seconds."
+          : "❌ Login failed, please try again.");
       alert(msg);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
       <h2 className="text-xl font-semibold mb-4">Login</h2>
-      <form onSubmit={handleLogin} className="space-y-4">
+      <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
         <input
           disabled={loading}
           value={email}
