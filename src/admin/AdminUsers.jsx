@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../api"; // your axios instance
+import api from "../api"; // Axios instance
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -9,7 +9,7 @@ export default function AdminUsers() {
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const { data } = await api.get("/admin/users"); // ✅ Correct route
+      const { data } = await api.get("/admin/users"); // ✅ Matches backend
       setUsers(data);
     } catch (err) {
       console.error("❌ Error fetching users:", err);
@@ -26,7 +26,7 @@ export default function AdminUsers() {
   // Verify user
   const verifyUser = async (id) => {
     try {
-      await api.put(`/admin/verify/${id}`); // ✅ Correct route
+      await api.put(`/admin/verify/${id}`);
       alert("✅ User verified successfully");
       fetchUsers();
     } catch (err) {
@@ -38,7 +38,7 @@ export default function AdminUsers() {
   // Suspend / Unsuspend user
   const toggleSuspend = async (id, isSuspended) => {
     try {
-      await api.put(`/admin/suspend/${id}`); // ✅ Correct route
+      await api.put(`/admin/suspend/${id}`);
       alert(
         isSuspended
           ? "♻️ User unsuspended successfully"
