@@ -6,20 +6,10 @@ export default function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Get token from localStorage
-  const token = localStorage.getItem("token");
-
-  // Axios config with auth header
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const { data } = await api.get("/auth/users", config); // GET uses config as 2nd argument
+      const { data } = await api.get("/admin/users"); // ✅ Correct admin route
       setUsers(data);
     } catch (err) {
       console.error("❌ Error fetching users:", err);
@@ -36,7 +26,7 @@ export default function AdminUsers() {
   // Verify user
   const verifyUser = async (id) => {
     try {
-      await api.put(`/auth/users/${id}/verify`, {}, config); // PUT: empty body + config
+      await api.put(`/admin/verify/${id}`); // ✅ Correct route
       alert("✅ User verified successfully");
       fetchUsers();
     } catch (err) {
@@ -48,7 +38,7 @@ export default function AdminUsers() {
   // Suspend / Unsuspend user
   const toggleSuspend = async (id) => {
     try {
-      await api.put(`/auth/users/${id}/suspend`, {}, config); // PUT: empty body + config
+      await api.put(`/admin/suspend/${id}`); // ✅ Correct route
       alert("⚙️ User suspension status updated");
       fetchUsers();
     } catch (err) {
