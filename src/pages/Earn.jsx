@@ -38,11 +38,13 @@ export default function Earn() {
     }
   };
 
-  // ✅ Fetch assignments (all available)
+  // ✅ Fetch assignments (available for normal users)
   const fetchAssignments = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/earn/assignments/all");
+      // 🧩 FIXED: normal users fetch from /earn/assignments
+      const res = await api.get("/earn/assignments");
+
       if (Array.isArray(res.data)) {
         setAssignments(res.data);
       } else {
