@@ -10,16 +10,25 @@ export default function Login() {
 
   // 🚀 Auto-redirect if already logged in
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
+    const savedUser = localStorage.getItem("user");
 
     if (!token || !savedUser) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      return; // nothing to parse
+    }
+
+    let user;
+    try {
+      user = JSON.parse(savedUser);
+    } catch (err) {
+      console.error("Invalid user in localStorage, clearing...", err);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       return;
     }
 
-    const user = JSON.parse(savedUser);
     if (user?.role === "admin") navigate("/admin");
     else navigate("/earn");
   }, [navigate]);
@@ -27,6 +36,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const { data } = await api.post("/auth/signin", {
         email: email.trim(),
@@ -35,11 +45,11 @@ export default function Login() {
 
       if (!data || !data.token) throw new Error("Invalid login response");
 
-      // ✅ Save cleanly
+      // ✅ Save token + user safely
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // ✅ Redirect based on user role
+      // ✅ Redirect based on role
       if (data.user?.role === "admin") navigate("/admin");
       else navigate("/earn");
     } catch (err) {
