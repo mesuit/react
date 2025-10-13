@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+// 🔒 Safe localStorage parse
+const safeGetUser = () => {
+  try {
+    const item = localStorage.getItem("user");
+    if (!item || item === "undefined" || item === "null") return null;
+    return JSON.parse(item);
+  } catch {
+    return null;
+  }
+};
+
 export default function Navbar() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const user = safeGetUser();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -86,7 +97,7 @@ export default function Navbar() {
             ✍️ Submit Assignment
           </Link>
 
-          {!token ? (
+          {!token || !user ? (
             <>
               <Link
                 to="/login"
