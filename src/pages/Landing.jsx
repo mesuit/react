@@ -1,7 +1,6 @@
 // src/pages/Landing.jsx
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaRobot, FaLanguage, FaFileAlt, FaLaptopCode, FaMoneyBillWave } from "react-icons/fa";
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -91,65 +90,56 @@ export default function Landing() {
             <h3 className="text-4xl font-bold mb-8 text-center">Our Features</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-gray-800 bg-opacity-50 p-6 rounded-xl text-center hover:bg-green-700 transition">
-                <FaRobot size={40} className="mx-auto mb-4 text-green-400" />
+                <span className="text-4xl mb-4 block">🤖</span>
                 <h4 className="text-xl font-semibold mb-2">Unlimited AI Tools</h4>
                 <p>Access AI with no response limits to assist in learning, research, and projects.</p>
               </div>
               <div className="bg-gray-800 bg-opacity-50 p-6 rounded-xl text-center hover:bg-green-700 transition">
-                <FaLanguage size={40} className="mx-auto mb-4 text-green-400" />
+                <span className="text-4xl mb-4 block">📝</span>
                 <h4 className="text-xl font-semibold mb-2">Kamusi</h4>
                 <p>Search English words, check pronunciation, and improve your language skills.</p>
               </div>
               <div className="bg-gray-800 bg-opacity-50 p-6 rounded-xl text-center hover:bg-green-700 transition">
-                <FaFileAlt size={40} className="mx-auto mb-4 text-green-400" />
+                <span className="text-4xl mb-4 block">📄</span>
                 <h4 className="text-xl font-semibold mb-2">Assignment Submission</h4>
                 <p>Submit tasks daily posted on the Earn page and get feedback from our team.</p>
               </div>
               <div className="bg-gray-800 bg-opacity-50 p-6 rounded-xl text-center hover:bg-green-700 transition">
-                <FaLaptopCode size={40} className="mx-auto mb-4 text-green-400" />
+                <span className="text-4xl mb-4 block">💻</span>
                 <h4 className="text-xl font-semibold mb-2">Services</h4>
                 <p>We offer WhatsApp bots, web design, and development services to help you grow.</p>
               </div>
               <div className="bg-gray-800 bg-opacity-50 p-6 rounded-xl text-center hover:bg-green-700 transition">
-                <FaMoneyBillWave size={40} className="mx-auto mb-4 text-green-400" />
+                <span className="text-4xl mb-4 block">💰</span>
                 <h4 className="text-xl font-semibold mb-2">Earn Daily</h4>
                 <p>Complete tasks posted by our partners on the Earn page, then submit on the Submit page to get rewarded.</p>
               </div>
             </div>
           </section>
 
-          {/* Other Sections like Journey, Community remain same */}
-          <section
-            ref={journeyRef}
-            className={`transition-opacity duration-1000 ${visibleSections.journey ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          >
+          {/* Journey, Earn, Community Sections */}
+          <section ref={journeyRef} className={`transition-opacity duration-1000 ${visibleSections.journey ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <h3 className="text-4xl font-bold mb-4">Your Learning Journey</h3>
             <p className="text-lg leading-relaxed">
               Learn at your own pace, track progress, unlock badges, and use our premium tools to maximize results.
             </p>
           </section>
 
-          <section
-            ref={earnRef}
-            className={`transition-opacity duration-1000 ${visibleSections.earn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          >
+          <section ref={earnRef} className={`transition-opacity duration-1000 ${visibleSections.earn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <h3 className="text-4xl font-bold mb-4">Earn While You Learn</h3>
             <p className="text-lg leading-relaxed">
               Daily tasks are posted on the Earn page. Complete them, submit via the Submit page, and earn real rewards.
             </p>
           </section>
 
-          <section
-            ref={communityRef}
-            className={`transition-opacity duration-1000 ${visibleSections.community ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          >
+          <section ref={communityRef} className={`transition-opacity duration-1000 ${visibleSections.community ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <h3 className="text-4xl font-bold mb-4">Community of Achievers</h3>
             <p className="text-lg leading-relaxed">
               Collaborate with learners, mentors, and partners. Exchange ideas, join projects, and grow together.
             </p>
           </section>
 
-          {/* CTA Section */}
+          {/* CTA */}
           <section className="text-center py-20">
             <h3 className="text-5xl font-bold mb-6">Ready to Transform Your Life?</h3>
             <p className="text-lg mb-8 max-w-3xl mx-auto">
