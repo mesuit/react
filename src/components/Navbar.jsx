@@ -45,7 +45,7 @@ export default function Navbar() {
 
         <div className="flex flex-col p-4 space-y-4">
           <Link
-            to="/"
+            to="Home"
             className="text-gray-700 hover:text-indigo-600"
             onClick={() => setIsOpen(false)}
           >
