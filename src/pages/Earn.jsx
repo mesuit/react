@@ -2,10 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api"; // Axios instance
 
+// 🔒 Safe localStorage parse
+const safeGetUser = () => {
+  try {
+    const item = localStorage.getItem("user");
+    if (!item || item === "undefined" || item === "null") return null;
+    return JSON.parse(item);
+  } catch {
+    return null;
+  }
+};
+
 export default function Earn() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const user = safeGetUser();
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -15,12 +26,12 @@ export default function Earn() {
 
   // 🔒 Redirect if no token
   useEffect(() => {
-    if (!token) {
+    if (!token || !user) {
       navigate("/login");
     } else {
       fetchUserData();
     }
-  }, [token]);
+  }, [token, user]);
 
   // ✅ Fetch user balance + referral data
   const fetchUserData = async () => {
@@ -42,9 +53,7 @@ export default function Earn() {
   const fetchAssignments = async () => {
     setLoading(true);
     try {
-      // 🧩 FIXED: normal users fetch from /earn/assignments
       const res = await api.get("/earn/assignments");
-
       if (Array.isArray(res.data)) {
         setAssignments(res.data);
       } else {
@@ -55,6 +64,7 @@ export default function Earn() {
       if (err.response?.status === 403 || err.response?.status === 401) {
         alert("Session expired. Please login again.");
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         navigate("/login");
       }
       setAssignments([]);
@@ -79,6 +89,7 @@ export default function Earn() {
       alert(err.response?.data?.error || "❌ Failed to accept assignment");
       if (err.response?.status === 403 || err.response?.status === 401) {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         navigate("/login");
       }
     }
