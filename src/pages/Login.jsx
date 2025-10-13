@@ -8,27 +8,26 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Safe get user from localStorage
-  const getSavedUser = () => {
-    const saved = localStorage.getItem("user");
-    if (!saved) return null;
-    try {
-      return JSON.parse(saved);
-    } catch {
-      console.warn("Corrupted user in localStorage, clearing...");
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      return null;
-    }
-  };
-
-  // 🚀 Redirect if already logged in
+  // Auto-redirect if already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const user = getSavedUser();
-    if (token && user) {
-      if (user.role === "admin") navigate("/admin");
-      else navigate("/"); // Normal users go to home
+    const savedUser = localStorage.getItem("user");
+
+    if (!token || !savedUser) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      return;
+    }
+
+    try {
+      const user = JSON.parse(savedUser);
+      if (user?.role === "admin") navigate("/admin");
+      else navigate("/"); // normal user goes to homepage
+    } catch {
+      // corrupted localStorage, clear it
+      console.warn("Invalid user in localStorage, clearing...");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
   }, [navigate]);
 
@@ -42,27 +41,36 @@ export default function Login() {
         password: password.trim(),
       });
 
-      if (!data || !data.token || !data.user) {
+      console.log("Login response:", data); // 🔹 debug the server response
+
+      if (!data || !data.token) {
         throw new Error("Invalid login response from server");
       }
 
-      // Save token and user safely
+      // Save token
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // Normalize user object
+      const user = data.user || {
+        id: data.id,
+        name: data.name || data.email,
+        email: data.email,
+        role: data.role || "user",
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
 
       // Redirect based on role
-      if (data.user.role === "admin") navigate("/admin");
-      else navigate("/"); // Normal users go to home
+      if (user.role === "admin") navigate("/admin");
+      else navigate("/"); // normal users go to homepage
     } catch (err) {
       console.error("Login error:", err);
-
       const msg =
         err.response?.data?.error ||
         err.response?.data?.message ||
         (err.message.includes("Network Error")
           ? "⚠️ Cannot reach server. Try again later."
           : err.message || "❌ Login failed. Check credentials.");
-
       alert(msg);
     } finally {
       setLoading(false);
