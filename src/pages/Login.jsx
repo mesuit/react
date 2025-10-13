@@ -8,14 +8,20 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Redirect if already logged in
+  // 🚀 Auto-redirect if already logged in
   useEffect(() => {
-    const saved = localStorage.getItem("user");
-    if (saved) {
-      const user = JSON.parse(saved);
-      if (user?.role === "admin") navigate("/admin");
-      else navigate("/");
+    const savedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+
+    if (!token || !savedUser) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      return;
     }
+
+    const user = JSON.parse(savedUser);
+    if (user?.role === "admin") navigate("/admin");
+    else navigate("/earn");
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -29,21 +35,21 @@ export default function Login() {
 
       if (!data || !data.token) throw new Error("Invalid login response");
 
-      // ✅ Save both user + token separately
+      // ✅ Save cleanly
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      // ✅ Redirect based on role
-      if (data.role === "admin") navigate("/admin");
-      else navigate("/");
+      // ✅ Redirect based on user role
+      if (data.user?.role === "admin") navigate("/admin");
+      else navigate("/earn");
     } catch (err) {
       console.error("Login error:", err);
       const msg =
         err.response?.data?.error ||
         err.response?.data?.message ||
         (err.message.includes("Network Error")
-          ? "⚠️ Cannot reach server. Try again in a few seconds."
-          : "❌ Login failed, please try again.");
+          ? "⚠️ Cannot reach server. Try again later."
+          : "❌ Login failed. Please check your credentials.");
       alert(msg);
     } finally {
       setLoading(false);
@@ -51,8 +57,8 @@ export default function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
-      <h2 className="text-xl font-semibold mb-4">Login</h2>
+    <div className="max-w-md mx-auto bg-white p-6 rounded shadow mt-10">
+      <h2 className="text-xl font-semibold mb-4 text-center">Login</h2>
       <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
         <input
           disabled={loading}
