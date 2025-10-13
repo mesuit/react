@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
-import api from "../api"; // Your Axios instance with baseURL and token
+import api from "../api"; // Axios instance with baseURL + token
 
 export default function AdminAssignments() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [creating, setCreating] = useState(false);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
     deadline: "",
   });
-  const [creating, setCreating] = useState(false);
+  const [file, setFile] = useState(null);
 
   // 🟣 Fetch assignments
   const fetchAssignments = async () => {
@@ -39,18 +41,36 @@ export default function AdminAssignments() {
     });
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
   // 🟢 Submit new assignment
   const handleCreate = async (e) => {
     e.preventDefault();
+
     if (!formData.title || !formData.description) {
       alert("Please fill all required fields.");
       return;
     }
+
     try {
       setCreating(true);
-      await api.post("/earn/assignments", formData);
+
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("price", formData.price);
+      data.append("deadline", formData.deadline);
+      if (file) data.append("file", file);
+
+      await api.post("/earn/assignments/create", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       alert("✅ Assignment created successfully!");
       setFormData({ title: "", description: "", price: "", deadline: "" });
+      setFile(null);
       fetchAssignments();
     } catch (err) {
       console.error("❌ Error creating assignment:", err);
@@ -65,6 +85,14 @@ export default function AdminAssignments() {
       <h2 className="text-3xl font-bold text-indigo-700">
         🛠 Admin — Manage Assignments
       </h2>
+
+      {/* 🟩 Manual Payment + Security Notice */}
+      <div className="bg-yellow-50 border border-yellow-300 p-4 rounded-xl text-sm text-gray-700">
+        ⚠️ <strong>Note:</strong> All payments are processed manually.  
+        Please ensure users provide a <strong>valid email</strong> when submitting.
+        Email feedback ensures <strong>security and verification</strong>.  
+        Payment details will be requested only after email confirmation.
+      </div>
 
       {/* 🟩 Create New Assignment Form */}
       <form
@@ -109,6 +137,14 @@ export default function AdminAssignments() {
           className="w-full p-2 border rounded-md"
         />
 
+        {/* 🟣 Optional File Upload */}
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx,.zip,.rar,.txt"
+          onChange={handleFileChange}
+          className="w-full p-2 border rounded-md"
+        />
+
         <button
           type="submit"
           disabled={creating}
@@ -144,6 +180,16 @@ export default function AdminAssignments() {
               <p className="text-gray-600 text-xs">
                 <strong>Price:</strong> {a.price ? `Ksh ${a.price}` : "—"}
               </p>
+              {a.fileUrl && (
+                <a
+                  href={a.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-600 text-xs mt-2 inline-block underline"
+                >
+                  📎 View Attachment
+                </a>
+              )}
             </div>
           ))}
         </div>
