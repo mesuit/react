@@ -6,15 +6,13 @@ export default function Submit() {
   const handleProceed = async () => {
     setLoading(true);
     try {
-      // Fake delay to show feedback
+      // Fake delay to show feedback (optional, can remove if instant)
       await new Promise((r) => setTimeout(r, 600));
 
-      alert("✅ Please make sure you provide a real email and correct username. Opening submission form…");
-
-      // Open in a new tab
+      // Open the submission form directly in a new tab
       window.open("https://submission12.netlify.app/", "_blank");
     } catch (err) {
-      alert("❌ Something went wrong. Please try again.");
+      console.error("Error opening submission form:", err);
     } finally {
       setLoading(false);
     }
@@ -28,6 +26,7 @@ export default function Submit() {
         Before proceeding, ensure your <strong>username</strong> is correct and 
         you provide a <strong>real email</strong> for feedback. 
         This helps us verify your submission and update your balance.
+        feedback will be given immediately to your email so in username space type 'username','email' in the submision form please
       </p>
 
       <button
