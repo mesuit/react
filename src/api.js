@@ -1,22 +1,21 @@
 import axios from "axios";
 
-// Always include /api so calls match your backend routes
 const BASE =
   process.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com/api";
 
 const api = axios.create({
   baseURL: BASE,
   headers: { "Content-Type": "application/json" },
-  withCredentials: true, // 🔥 important for cross-origin CORS requests
 });
 
-// Attach token if present
-api.interceptors.request.use((cfg) => {
+// ✅ Automatically include JWT token
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
-    cfg.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  return cfg;
+  return config;
 });
 
 export default api;
+
