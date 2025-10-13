@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api"; // axios instance
+import api from "../api"; // Axios instance
 
 export default function Earn() {
   const navigate = useNavigate();
@@ -13,9 +13,13 @@ export default function Earn() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // 🔒 Redirect if no token
   useEffect(() => {
-    if (!token) navigate("/login");
-    else fetchUserData();
+    if (!token) {
+      navigate("/login");
+    } else {
+      fetchUserData();
+    }
   }, [token]);
 
   // ✅ Fetch user balance + referral data
@@ -26,6 +30,11 @@ export default function Earn() {
       setReferrals(res.data.referrals || { count: 0, points: 0 });
     } catch (err) {
       console.error("❌ Error fetching user data:", err);
+      if (err.response?.status === 403 || err.response?.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/login");
+      }
     }
   };
 
@@ -34,15 +43,25 @@ export default function Earn() {
     setLoading(true);
     try {
       const res = await api.get("/earn/assignments/all");
-      setAssignments(Array.isArray(res.data) ? res.data : []);
+      if (Array.isArray(res.data)) {
+        setAssignments(res.data);
+      } else {
+        setAssignments([]);
+      }
     } catch (err) {
       console.error("❌ Error fetching assignments:", err);
+      if (err.response?.status === 403 || err.response?.status === 401) {
+        alert("Session expired. Please login again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
       setAssignments([]);
     } finally {
       setLoading(false);
     }
   };
 
+  // ⏱ Load assignments after accepting terms
   useEffect(() => {
     if (acceptedTerms) fetchAssignments();
   }, [acceptedTerms]);
@@ -54,7 +73,12 @@ export default function Earn() {
       alert(res.data.message || "✅ Assignment accepted — check your email for details.");
       fetchUserData();
     } catch (err) {
+      console.error("❌ Accept assignment error:", err);
       alert(err.response?.data?.error || "❌ Failed to accept assignment");
+      if (err.response?.status === 403 || err.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
     }
   };
 
