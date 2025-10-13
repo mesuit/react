@@ -8,29 +8,28 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🚀 Auto-redirect if already logged in
+  // Safe get user from localStorage
+  const getSavedUser = () => {
+    const saved = localStorage.getItem("user");
+    if (!saved) return null;
+    try {
+      return JSON.parse(saved);
+    } catch {
+      console.warn("Corrupted user in localStorage, clearing...");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      return null;
+    }
+  };
+
+  // 🚀 Redirect if already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const savedUser = localStorage.getItem("user");
-
-    if (!token || !savedUser) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      return; // nothing to parse
+    const user = getSavedUser();
+    if (token && user) {
+      if (user.role === "admin") navigate("/admin");
+      else navigate("/"); // Normal users go to home
     }
-
-    let user;
-    try {
-      user = JSON.parse(savedUser);
-    } catch (err) {
-      console.error("Invalid user in localStorage, clearing...", err);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      return;
-    }
-
-    if (user?.role === "admin") navigate("/admin");
-    else navigate("/earn");
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -43,23 +42,27 @@ export default function Login() {
         password: password.trim(),
       });
 
-      if (!data || !data.token) throw new Error("Invalid login response");
+      if (!data || !data.token || !data.user) {
+        throw new Error("Invalid login response from server");
+      }
 
-      // ✅ Save token + user safely
+      // Save token and user safely
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // ✅ Redirect based on role
-      if (data.user?.role === "admin") navigate("/admin");
-      else navigate("/earn");
+      // Redirect based on role
+      if (data.user.role === "admin") navigate("/admin");
+      else navigate("/"); // Normal users go to home
     } catch (err) {
       console.error("Login error:", err);
+
       const msg =
         err.response?.data?.error ||
         err.response?.data?.message ||
         (err.message.includes("Network Error")
           ? "⚠️ Cannot reach server. Try again later."
-          : "❌ Login failed. Please check your credentials.");
+          : err.message || "❌ Login failed. Check credentials.");
+
       alert(msg);
     } finally {
       setLoading(false);
