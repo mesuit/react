@@ -289,7 +289,7 @@ export default function Donate() {
         <footer className="bg-black bg-opacity-90 text-center p-6 mt-auto">
           <p>© 2025 Learn & Earn. All Rights Reserved.</p>
           <p className="text-sm text-gray-400 mt-2">
-            Powered by Gifted Tech M-Pesa Integration
+            Powered by Makamesco Digital solutions
           </p>
         </footer>
       </div>
