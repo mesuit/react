@@ -41,7 +41,7 @@ export default function App() {
   return (
     <LayoutWithNavbar>
       <Routes>
-        {/* Landing page first */}
+        {/* Landing page */}
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -53,6 +53,9 @@ export default function App() {
         <Route path="/categories" element={<Categories />} />
         <Route path="/category/:id" element={<CategoryPage />} />
         <Route path="/submit" element={<Submit />} />
+
+        {/* ❤️ Donate page */}
+        <Route path="/donate" element={<Donate />} />
 
         {/* Admin routes */}
         <Route
