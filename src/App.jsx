@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 
 // 🌍 Pages
 import Landing from "./pages/Landing";
+import Donate from "./pages/Donate";
 import Home from "./pages/Home";
 import Categories from "./pages/Categories";
 import CategoryPage from "./pages/CategoryPage";
