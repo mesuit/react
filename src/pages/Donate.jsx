@@ -7,8 +7,7 @@ export default function Donate() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // 🔗 Your working MPESA endpoint (✅ fixed typo)
-  const MPESA_ENDPOINT = "https://mpesa-stk.giftedtech.co.ke/api/payMaka.php"; 
+  const MPESA_ENDPOINT = "https://mpesa-stk.giftedtech.co.ke/api/payMaka.php";
 
   const handleDonate = async (e) => {
     e.preventDefault();
@@ -23,29 +22,30 @@ export default function Donate() {
 
     try {
       console.log("📡 Sending STK push request to:", MPESA_ENDPOINT);
+      console.log("📞 Phone:", phone, "💰 Amount:", amount);
 
-      const res = await axios.post(MPESA_ENDPOINT, {
-        phone,
-        amount,
-      });
+      const res = await axios.post(MPESA_ENDPOINT, { phone, amount });
 
       console.log("✅ Response:", res.data);
 
       if (res.status === 200) {
-        setMessage("✅ STK Push sent successfully! Please complete payment on your phone.");
+        setMessage(
+          "✅ STK Push sent successfully! Please complete the payment on your phone."
+        );
       } else {
         setMessage("⚠️ Something went wrong. Please try again.");
       }
     } catch (error) {
-      console.error("❌ Donation error:", error);
-      setMessage("❌ Unable to initiate payment. Check your phone number or try later.");
+      console.error("❌ Error while initiating payment:", error);
+      setMessage(
+        "❌ Unable to initiate payment. Check your phone number or try later."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const backgroundImage =
-    "https://files.catbox.moe/sigghy.jpg";
+  const backgroundImage = "https://files.catbox.moe/sigghy.jpg";
 
   return (
     <div
@@ -66,7 +66,10 @@ export default function Donate() {
             <a href="/earn" className="hover:underline">
               Earn
             </a>
-            <a href="/donate" className="text-green-400 underline font-semibold">
+            <a
+              href="/donate"
+              className="text-green-400 underline font-semibold"
+            >
               Donate
             </a>
           </nav>
@@ -78,13 +81,12 @@ export default function Donate() {
             Support the Future of Free Learning 🌍
           </h2>
           <p className="max-w-3xl text-lg md:text-xl mb-10 leading-relaxed">
-            <strong>Learn & Earn</strong> is 100% free and powered by passion — not profit.
-            Every project we launch, every tool we build, and every feature we improve is
-            meant to empower learners globally.  
-            If you believe in this mission, your donation helps us manage hosting, scale
-            innovation, and inspire more creators.  
-            Together, we’re building a movement that makes quality education accessible to
-            all.
+            <strong>Learn & Earn</strong> is 100% free and powered by passion —
+            not profit. Every project we launch, every tool we build, and every
+            feature we improve is meant to empower learners globally. If you
+            believe in this mission, your donation helps us manage hosting,
+            scale innovation, and inspire more creators. Together, we’re
+            building a movement that makes quality education accessible to all.
           </p>
         </section>
 
@@ -96,11 +98,14 @@ export default function Donate() {
           >
             <h3 className="text-2xl font-bold mb-4">Make a Donation 💚</h3>
             <p className="text-gray-300 text-sm mb-6">
-              Help us keep Learn & Earn free for everyone. Enter your Safaricom number and amount to support our growth.
+              Help us keep Learn & Earn free for everyone. Enter your Safaricom
+              number and amount to support our growth.
             </p>
 
             <div className="mb-4 text-left">
-              <label className="block text-sm mb-2">Phone Number (Safaricom)</label>
+              <label className="block text-sm mb-2">
+                Phone Number (Safaricom)
+              </label>
               <input
                 type="tel"
                 value={phone}
@@ -133,9 +138,7 @@ export default function Donate() {
               {loading ? "Processing..." : "Donate Now"}
             </button>
 
-            {message && (
-              <p className="mt-4 text-sm text-gray-200">{message}</p>
-            )}
+            {message && <p className="mt-4 text-sm text-gray-200">{message}</p>}
           </form>
         </section>
 
@@ -143,3 +146,21 @@ export default function Donate() {
         <section className="text-center px-6 pb-16 max-w-4xl mx-auto">
           <h3 className="text-3xl font-bold mb-4">Where Your Support Goes</h3>
           <p className="text-lg leading-relaxed">
+            Every shilling donated helps pay for cloud servers, bandwidth,
+            content creation, and developer maintenance — keeping Learn & Earn
+            free for students, teachers, and entrepreneurs. Your generosity
+            directly sustains our management and fuels future projects like AI
+            learning assistants, internship portals, and rural tech literacy
+            programs. We’re not asking for charity — we’re asking you to invest
+            in the next generation of dreamers. 🙏
+          </p>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-black bg-opacity-90 text-center p-6 mt-auto">
+          <p>© 2025 Learn & Earn. All Rights Reserved.</p>
+        </footer>
+      </div>
+    </div>
+  );
+}
