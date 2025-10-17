@@ -124,10 +124,8 @@ export default function Donate() {
       console.log("💰 Amount:", amount);
 
       const res = await axios.post(MPESA_ENDPOINT, {
-        phone: formattedPhone,
-        amount: amount,
-        account: "Learn & Earn Donation",
-        callback: "https://mpesa-stk.giftedtech.co.ke/api/verify-transaction.php"
+        phoneNumber: formattedPhone,
+        amount: amount
       });
 
       console.log("✅ Response:", res.data);
