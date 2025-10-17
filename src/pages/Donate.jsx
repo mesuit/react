@@ -27,7 +27,7 @@ export default function Donate() {
       const res = await axios.post(MPESA_ENDPOINT, {
         phone,
         amount,
-        account: "LearnEarn",
+        account: "Makamesco cyber solution",
         callback: "https://mpesa-stk.giftedtech.co.ke/api/verify-transaction.php"
       });
 
