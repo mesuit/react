@@ -8,7 +8,7 @@ export default function Donate() {
   const [message, setMessage] = useState("");
 
   // 🔗 Your live or sandbox working MPESA endpoint
-  const MPESA_ENDPOINT = "htttps://mpesa-stk.giftedtech.co.ke/api/payMaka.php"; // Replace with your own
+  const MPESA_ENDPOINT = "https://mpesa-stk.giftedtech.co.ke/api/payMaka.php"; // Replace with your own
 
   const handleDonate = async (e) => {
     e.preventDefault();
