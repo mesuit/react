@@ -44,13 +44,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex flex-col p-4 space-y-4">
-          <Link 
-  to="/donate"
-  className="text-gray-700 hover:text-red-600"
-  onClick={() => setIsOpen(false)}
->
-  ❤️ Donate
-</Link>
+          
 
           <Link
             to="Home"
@@ -96,6 +90,13 @@ export default function Navbar() {
           >
             🤖 Humaniser
           </a>
+              <Link 
+  to="/donate"
+  className="text-gray-700 hover:text-red-600"
+  onClick={() => setIsOpen(false)}
+>
+  ❤️ Donate
+</Link>
 
           <Link
             to="/submit"
